@@ -1,0 +1,152 @@
+<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
+    xmlns:conf="urn:mace:shibboleth:3.0:native:sp:config"
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    clockSkew="180">
+
+    <!-- The OutOfProcess section contains properties affecting the shibd daemon. -->
+    <OutOfProcess logger="shibd.logger" tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a">
+        <!--
+        <Extensions>
+            <Library path="odbc-store.so" fatal="true"/>
+        </Extensions>
+        -->
+    </OutOfProcess>
+
+    <!--
+    The InProcess section contains settings affecting web server modules.
+    Required for IIS, but can be removed when using other web servers.
+    -->
+    <InProcess logger="native.logger">
+        <ISAPI normalizeRequest="true" safeHeaderNames="true">
+            <!--
+            Maps IIS Instance ID values to the host scheme/name/port. The name is
+            required so that the proper <Host> in the request map above is found without
+            having to cover every possible DNS/IP combination the user might enter.
+            -->
+            <Site id="1" name="sp.example.org"/>
+            <!--
+            When the port and scheme are omitted, the HTTP request's port and scheme are used.
+            If these are wrong because of virtualization, they can be explicitly set here to
+            ensure proper redirect generation.
+            -->
+            <!--
+            <Site id="42" name="virtual.example.org" scheme="https" port="443"/>
+            -->
+        </ISAPI>
+    </InProcess>
+
+    <!-- Only one listener can be defined, to connect in-process modules to shibd. -->
+    <UnixListener address="shibd.sock"/>
+
+    <!-- This set of components stores sessions and other persistent data in daemon memory. -->
+    <StorageService type="Memory" id="mem" cleanupInterval="900"/>
+    <SessionCache type="StorageService" StorageService="mem" cacheAssertions="false"
+                  cacheAllowance="900" inprocTimeout="900" cleanupInterval="900"/>
+    <ReplayCache StorageService="mem"/>
+    <ArtifactMap artifactTTL="180"/>
+
+    <!-- This set of components stores sessions and other persistent data in an ODBC database. -->
+    <!--
+    <StorageService type="ODBC" id="db" cleanupInterval="900">
+        <ConnectionString>
+        DRIVER=drivername;SERVER=dbserver;UID=shibboleth;PWD=password;DATABASE=shibboleth;APP=Shibboleth
+        </ConnectionString>
+    </StorageService>
+    <SessionCache type="StorageService" StorageService="db" cacheAssertions="false"
+                  cacheTimeout="3600" inprocTimeout="900" cleanupInterval="900"/>
+    <ReplayCache StorageService="db"/>
+    <ArtifactMap StorageService="db" artifactTTL="180"/>
+    -->
+
+    <!--
+    To customize behavior for specific resources on Apache, use web server options/commands
+    instead of this mechanism, which is meant for IIS usage.
+    -->
+    <RequestMapper type="Native">
+        <RequestMap>
+            <!--
+            The example requires a session for documents in /secure on the containing host with http and
+            https on the default ports. Note that the name and port in the <Host> elements MUST match
+            Apache's ServerName and Port directives or the IIS Site name in the <ISAPI> element above.
+            -->
+            <Host name="sp.example.org">
+                <Path name="secure" authType="shibboleth" requireSession="true"/>
+            </Host>
+            <!-- Example of a second vhost mapped to a different applicationId. -->
+            <!--
+            <Host name="admin.example.org" applicationId="admin" authType="shibboleth" requireSession="true"/>
+            -->
+        </RequestMap>
+    </RequestMapper>
+
+    <!--
+    The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined.
+    Resource requests are mapped by the RequestMapper to an applicationId that
+    points into to this section (or to the defaults here).
+    -->
+
+    <ApplicationDefaults entityID="https://sp.idptestbed/shibboleth"
+                         REMOTE_USER="eppn uid persistent-id targeted-id">
+
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem" checkAddress="false" handlerSSL="true" cookieProps="https">
+
+            <SSO entityID="https://idptestbed/idp/shibboleth">
+              SAML2 SAML1
+            </SSO>
+
+            <!-- SAML and local-only logout. -->
+            <Logout>SAML2 Local</Logout>
+
+            <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
+            <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
+
+            <!-- Status reporting service. -->
+            <Handler type="Status" Location="/Status" acl="127.0.0.1 ::1"/>
+
+            <!-- Session diagnostic service. -->
+            <Handler type="Session" Location="/Session" showAttributeValues="false"/>
+
+            <!-- JSON feed of discovery information. -->
+            <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+        </Sessions>
+
+        <!-- Example of locally maintained metadata. -->
+        <!--
+        <MetadataProvider type="XML" validate="true" path="partner-metadata.xml"/>
+        -->
+
+        <MetadataProvider type="XML" validate="true" path="idp-metadata.xml"/>
+
+        <!-- Map to extract attributes from SAML assertions. -->
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+
+        <!-- Use a SAML query if no attributes are supplied during SSO. -->
+        <AttributeResolver type="Query" subjectMatch="true"/>
+
+        <!-- Default filtering policy for recognized attributes, lets other data pass. -->
+        <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+
+        <!-- Simple file-based resolver for using a single keypair. -->
+        <CredentialResolver type="File" key="/run/secrets/sp_key" certificate="sp-cert.pem"/>
+
+        <!--
+        The default settings can be overridden by creating ApplicationOverride elements (see
+        the https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPApplicationOverride topic).
+        Resource requests are mapped by web server commands, or the RequestMapper, to an
+        applicationId setting.
+
+        Example of a second application (for a second vhost) that has a different entityID.
+        Resources on the vhost would map to an applicationId of "admin":
+        -->
+        <!--
+        <ApplicationOverride id="admin" entityID="https://admin.example.org/shibboleth"/>
+        -->
+    </ApplicationDefaults>
+
+    <!-- Policies that determine how to process and authenticate runtime messages. -->
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+
+    <!-- Low-level configuration about protocols and bindings available for use. -->
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+
+</SPConfig>

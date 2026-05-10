@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+# 1. Arrancar el demonio de Shibboleth en segundo plano
+mkdir -p /var/run/shibboleth
+chown shibd:shibd /var/run/shibboleth
+rm -f /var/run/shibboleth/shibd.sock
+
+/usr/sbin/shibd -u shibd -g shibd -c /etc/shibboleth/shibboleth2.xml
+
+# Apache gets grumpy about PID files pre-existing
+rm -f /usr/local/apache2/logs/httpd.pid /run/httpd/httpd.pid
+
+# start fpm
+if [ ! -d "/run/php-fpm" ]
+then
+  mkdir /run/php-fpm
+fi
+
+php-fpm -D
+
+exec httpd -X -DFOREGROUND
