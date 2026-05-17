@@ -21,7 +21,7 @@ ARG HTTPD_VERSION=2.4.37
 COPY --from=download_ssp /var/simplesamlphp /var/simplesamlphp
 
 RUN dnf module enable -y php:7.4 \
-    && dnf install -y httpd-$HTTPD_VERSION php-$PHP_VERSION \
+    && dnf install -y httpd-$HTTPD_VERSION php-$PHP_VERSION php-ldap-$PHP_VERSION \
     && dnf clean all \
     && rm -rf /var/cache/yum
 
