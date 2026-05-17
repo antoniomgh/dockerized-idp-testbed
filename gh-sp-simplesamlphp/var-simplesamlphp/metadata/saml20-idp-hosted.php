@@ -5,16 +5,16 @@
  * See: https://simplesamlphp.org/docs/stable/simplesamlphp-reference-idp-hosted
  */
 
-$metadata['https://idptestbed/idp/simplesamlphp'] = array(
+$metadata['https://idptestbed.localhost/idp/simplesamlphp'] = array(
 	/*
 	 * The hostname of the server (VHOST) that will use this SAML entity.
 	 *
 	 * Can be '__DEFAULT__', to use this entry by default.
 	 */
-	'host' => 'idptestbed',
+	'host' => 'idptestbed.localhost',
 
 	// X.509 key and certificate. Relative to the cert directory.
-	'privatekey' => 'server.pem',
+	'privatekey' => '/run/secrets/ssp_key',
 	'certificate' => 'server.crt',
 
 	/*

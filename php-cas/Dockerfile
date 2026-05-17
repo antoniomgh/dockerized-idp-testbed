@@ -47,6 +47,17 @@ COPY httpd-foreground /usr/local/bin/
 COPY etc-httpd/ /etc/httpd/
 COPY var-www-html/ /var/www/html/
 
+RUN sed -i 's|^LogLevel \+[^ $]\+|LogLevel info |g' /etc/httpd/conf/httpd.conf
+
+RUN find /etc/httpd/ -name "*.conf" -exec sed -i \
+    -e 's|ErrorLog ".*"|ErrorLog /dev/stderr|g' \
+    -e 's|ErrorLog [^/].*|ErrorLog /dev/stderr|g' \
+    -e 's|CustomLog ".*"|CustomLog /dev/stdout|g' \
+    -e 's|CustomLog \+[^\ ]\+|CustomLog /dev/stdout |g' \
+    -e 's|TransferLog ".*"|TransferLog /dev/stdout|g' \
+    -e 's|TransferLog [^/].*|TransferLog /dev/stdout|g' \
+    {} +
+
 RUN chmod +x /usr/local/bin/httpd-foreground
 
 EXPOSE 80 443

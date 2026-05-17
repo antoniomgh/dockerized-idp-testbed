@@ -1,4 +1,4 @@
-# LDIF file to add organizational unit "ou=people" under "dc=idptestbed"
+# LDIF file to add organizational unit "ou=people" under "dc=idptestbed,dc=localhost"
 dn: ou=People,dc=idptestbed,dc=localhost
 objectClass: top
 objectClass: organizationalUnit

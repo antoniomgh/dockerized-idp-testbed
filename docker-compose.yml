@@ -33,9 +33,9 @@ services:
     image: osixia/openldap:1.5.0
     container_name: ldap
     environment:
-      LDAP_BASE_DN: "ou=people,dc=idptestbed"
+      LDAP_BASE_DN: "ou=people,dc=idptestbed,dc=localhost"
       LDAP_ORGANISATION: "Example Organization"
-      LDAP_DOMAIN: "idptestbed"
+      LDAP_DOMAIN: "idptestbed.localhost"
       LDAP_ADMIN_PASSWORD: "password"
       LDAP_TLS: "false"             # deactivate TLS for the LDAP server
     healthcheck:
@@ -81,6 +81,8 @@ services:
       context: ./gh-saml-sp-simplesamlphp/
       dockerfile: Dockerfile
     image: gh/saml-sp-simplesamlphp:latest
+    depends_on:
+      - gh-saml-sp-shibboleth
     profiles:
       - builder # Evita que se levante al hacer 'up'
 
@@ -100,17 +102,17 @@ services:
       context: ./gh-sp-simplesamlphp/
       dockerfile: Dockerfile
     links:
-      - httpd-proxy:idptestbed
+      - httpd-proxy:idptestbed.localhost
     networks:
       - back
     secrets:
       - source: ssp_key
 
   php-cas:
-    container_name: cas
+    container_name: php-cas
     build: ./php-cas/
     links:
-      - httpd-proxy:idptestbed
+      - httpd-proxy:idptestbed.localhost
     networks:
       - back
 

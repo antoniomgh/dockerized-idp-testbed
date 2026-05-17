@@ -1,4 +1,4 @@
-dn: cn=admin,dc=idptestbed
+dn: cn=admin,dc=idptestbed,dc=localhost
 objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: admin
@@ -6,7 +6,7 @@ userPassword: password
 description: LDAP administrator
 
 
-dn: uid=student1,ou=People,dc=idptestbed
+dn: uid=student1,ou=People,dc=idptestbed,dc=localhost
 objectClass: organizationalPerson
 objectClass: person
 objectClass: top
@@ -18,7 +18,7 @@ cn: Stud Ent
 mail: student1@idptestbed.edu
 userPassword: password
 
-dn: uid=staff1,ou=People,dc=idptestbed
+dn: uid=staff1,ou=People,dc=idptestbed,dc=localhost
 objectClass: organizationalPerson
 objectClass: person
 objectClass: top

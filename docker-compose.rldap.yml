@@ -9,6 +9,7 @@ services:
       - "443:443"
 
   idp:
+    container_name: idp
     build: ./idp/
     depends_on:
       - ldap
@@ -28,6 +29,7 @@ services:
       - source: idp_sealer
 
   ldap:
+    container_name: ldap
     build: ./ldap/
     networks:
       - back
@@ -49,6 +51,7 @@ services:
       - builder # Evita que se levante al hacer 'up'
 
   sp:
+    container_name: sp
     build:
       context: ./gh-sp-shibboleth/
       dockerfile: Dockerfile
@@ -58,20 +61,22 @@ services:
       - source: sp_key
 
   simplesamlphp:
+    container_name: simplesamlphp
     build:
       context: ./gh-sp-simplesamlphp/
       dockerfile: Dockerfile
     links:
-      - httpd-proxy:idptestbed
+      - httpd-proxy:idptestbed.localhost
     networks:
       - back
     secrets:
       - source: ssp_key
 
   php-cas:
+    container_name: php-cas
     build: ./php-cas/
     links:
-      - httpd-proxy:idptestbed
+      - httpd-proxy:idptestbed.localhost
     networks:
       - back
 
