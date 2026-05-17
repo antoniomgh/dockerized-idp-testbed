@@ -1,3 +1,12 @@
+# Versión
+
+Esta versión añade el ldap original, montado desde un centos7 por uno basado en osixia/openldap:1.5.0, incluyendo un UI, accesible desde:
+
+
+URL: http://localhost:8081/
+Usuario: cn=admin,dc=idptestbed
+Password: password
+
 
 https://github.com/osixia/container-openldap/blob/main/image/service/slapd/assets/config/bootstrap/ldif/01-config-password.ldif
 
