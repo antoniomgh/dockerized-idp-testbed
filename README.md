@@ -1,3 +1,76 @@
+
+https://github.com/osixia/container-openldap/blob/main/image/service/slapd/assets/config/bootstrap/ldif/01-config-password.ldif
+
+# Docker commands
+
+Down:
+docker compose -f docker-compose.r1.yml down -v
+
+Up:
+docker compose --progress plain -f docker-compose.r1.yml up --detach --build --force-recreate
+
+Logs:
+docker logs -f ldap
+
+# Web Admin
+
+http://localhost:8081/
+
+cn=admin,dc=idptestbed
+password
+
+# ladpsearch
+
+## Inside the container
+
+docker exec -it ldap /bin/bash
+
+ok: Query using admin all objects
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "objectclass=*"
+
+ok: Query using admin a specific user
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(uid=student1)"
+
+ok: Query using admin a organizational unit
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(ou=people)"
+
+ok: Query using admin a specific user without attributes
+% ldapsearch -x -b "ou=People,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+
+--> 32 No such object
+% ldapsearch -x -b "ou=People,dc=idptestbed" -D "uid=student1,ou=People,dc=idptestbed" -w password
+
+## Outside the container (docker exec)
+
+ok: Query using admin all objects
+% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "objectclass=*"
+
+ok: Query using admin a specific user
+% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(uid=student1)"
+
+ok: Query using admin a organizational unit
+% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(ou=people)"
+
+ok: Query using admin a specific user without attributes
+% docker exec ldap ldapsearch -x -b "ou=People,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+
+docker exec ldap ldapsearch -x -H ldap://ldap:389 -b "ou=people,dc=idptestbed" -s one "(uid=student1)" 1.1
+docker exec ldap ldapsearch -x -b "ou=people,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+## Outside the container
+
+ok: Query using admin all objects
+% ldapsearch -x -H ldap://ldap:389 -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "objectclass=*"
+
+ok: Query using admin a specific user
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(uid=student1)"
+
+ok: Query using admin a organizational unit
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(ou=people)"
+
+ok: Query using admin a specific user without attributes
+% ldapsearch -x -H ldap://ldap:389 -b "ou=People,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+
+
 # dockerized-idp-testbed
 
 Used to validate the following Unicon docker images:

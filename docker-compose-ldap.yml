@@ -9,11 +9,9 @@ services:
       - "443:443"
 
   idp:
-    container_name: idp
     build: ./idp/
     depends_on:
-      ldap:
-        condition: service_healthy
+      - ldap
     environment:
       - JETTY_MAX_HEAP=64m
       - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
@@ -30,43 +28,9 @@ services:
       - source: idp_sealer
 
   ldap:
-    image: osixia/openldap:1.5.0
-    container_name: ldap
-    environment:
-      LDAP_BASE_DN: "ou=people,dc=idptestbed"
-      LDAP_ORGANISATION: "Example Organization"
-      LDAP_DOMAIN: "idptestbed"
-      LDAP_ADMIN_PASSWORD: "password"
-      LDAP_TLS: "false"             # deactivate TLS for the LDAP server
-    healthcheck:
-      test: ["CMD-SHELL", "exit 0"]
-      start_period: 50s
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - ./resources/ldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/50-bootstrap.ldif
+    build: ./ldap/
     networks:
       - back
-    ports:
-      - "389:389"                   # default port for unsecured LDAP
-    command: --copy-service --loglevel debug
-    restart: unless-stopped
-
-  ldap-phpldapadmin:
-    image: osixia/phpldapadmin:latest
-    container_name: phpldapadmin
-    environment:
-      PHPLDAPADMIN_LDAP_HOSTS: ldap
-      PHPLDAPADMIN_HTTPS: "false"   # deactivate HTTPS
-    networks:
-      - back
-    ports:
-      - "8081:80"
-    restart: unless-stopped
-    depends_on:
-      ldap:
-        condition: service_healthy
 
   gh-saml-sp-shibboleth:
     build:
@@ -85,7 +49,6 @@ services:
       - builder # Evita que se levante al hacer 'up'
 
   sp:
-    container_name: sp
     build:
       context: ./gh-sp-shibboleth/
       dockerfile: Dockerfile
@@ -95,7 +58,6 @@ services:
       - source: sp_key
 
   simplesamlphp:
-    container_name: simplesamlphp
     build:
       context: ./gh-sp-simplesamlphp/
       dockerfile: Dockerfile
@@ -107,7 +69,6 @@ services:
       - source: ssp_key
 
   php-cas:
-    container_name: cas
     build: ./php-cas/
     links:
       - httpd-proxy:idptestbed
