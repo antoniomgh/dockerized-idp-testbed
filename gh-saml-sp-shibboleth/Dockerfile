@@ -18,7 +18,7 @@ ARG VERSION_HTTPD=2.4.37
 ARG VERSION_SHIBBOLETH=3.5.2-1.el8
 
 RUN dnf module enable -y php:7.4 \
-    && dnf install -y mod_ssl shibboleth-$VERSION_SHIBBOLETH httpd-$VERSION_HTTPD php-$VERSION_PHP \
+    && dnf install -y openssl mod_ssl shibboleth-$VERSION_SHIBBOLETH httpd-$VERSION_HTTPD php-$VERSION_PHP \
     && dnf clean all \
     && rm -rf /var/cache/yum
 

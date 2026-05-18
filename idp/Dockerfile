@@ -9,9 +9,11 @@ RUN sed -i s/mirrorlist.centos.org/vault.centos.org/ ${repo_file}
 RUN sed -i s/mirror.centos.org/vault.centos.org/ ${repo_file}
 RUN yum clean all
 
-RUN yum -y update \
-    && yum -y install openldap-clients \
-    && yum -y clean all
+# BEGIN Ldap Debug purposes ---
+# RUN yum -y update \
+#     && yum -y install openldap-clients \
+#     && yum -y clean all
+# END Ldap Debug purposes ---
 
 COPY shibboleth-idp/ /opt/shibboleth-idp/
 COPY shib-jetty-base/ /opt/shib-jetty-base/

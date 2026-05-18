@@ -1,5 +1,6 @@
 services:
   httpd-proxy:
+    container_name: httpd-proxy
     build: ./httpd-proxy/
     networks:
       - front

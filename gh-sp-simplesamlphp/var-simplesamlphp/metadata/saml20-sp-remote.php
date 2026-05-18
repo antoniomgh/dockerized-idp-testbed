@@ -8,7 +8,7 @@
 /*
  * Example SimpleSAMLphp SAML 2.0 SP
  */
-$metadata['http://idptestbed.localhost/sp/simplesamlphp'] = array(
+$metadata['http://secaas-labs-organization/sp/simplesamlphp'] = array(
 	'AssertionConsumerService' => 'https://idptestbed.localhost/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp',
 	'SingleLogoutService' => 'https://idptestbed.localhost/simplesaml/module.php/saml/sp/saml2-logout.php/default-sp',
 );

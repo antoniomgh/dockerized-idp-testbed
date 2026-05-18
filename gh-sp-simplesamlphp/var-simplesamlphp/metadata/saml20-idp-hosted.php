@@ -5,7 +5,7 @@
  * See: https://simplesamlphp.org/docs/stable/simplesamlphp-reference-idp-hosted
  */
 
-$metadata['https://idptestbed.localhost/idp/simplesamlphp'] = array(
+$metadata['https://secaas-labs-organization/idp/simplesamlphp'] = array(
 	/*
 	 * The hostname of the server (VHOST) that will use this SAML entity.
 	 *

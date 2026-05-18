@@ -14,8 +14,8 @@ NC='\033[0m' # No Color
 # =====================================================================
 # 🔄 LLAMADA AL SCRIPT DE LIMPIEZA
 # =====================================================================
-echo -e "${YELLOW}🔄 Ejecutando limpieza previa con ddown.sh...${NC}"
-${BIN_FOLDER}/ddown.sh "$1"
+echo -e "${YELLOW}🔄 Ejecutando limpieza previa con dstop.sh...${NC}"
+${BIN_FOLDER}/dstop.sh "$1"
 
 COMPOSE_FILENAME="docker-compose.yml"
 if [ ! -z "$1" ]; then

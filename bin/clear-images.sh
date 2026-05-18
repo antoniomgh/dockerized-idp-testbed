@@ -1,37 +1,32 @@
-#!/bin/bash
-###########################################
-#
-# Simple Shell script to clean/remove all container/images
-#
-# The script will 
-#  - first stop all running containers (if any),
-#  - remove containers
-#  - remove images
-#  - remove volumes
-#
+#!/usr/bin/env bash
 
-# stop all running containers
-echo '####################################################'
-echo 'Stopping running containers (if available)...'
-echo '####################################################'
-docker stop $(docker ps -aq)
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+DONE="[${GREEN}DONE${NC}]"
+PROGRESS="[${YELLOW}....${NC}]"
 
-# remove all stopped containers
-echo '####################################################'
-echo 'Removing containers ..'
-echo '####################################################'
-docker rm $(docker ps -aq)
+echo -ne "${PROGRESS} Stop all running containers\r"
+docker stop $(docker ps -q) 2>/dev/null
+echo -ne "${DONE} Stop all running containers\r"
+echo -ne '\n'
 
+echo -ne "${PROGRESS} Remove old containers\r"
+docker rm $(docker ps -a -q) 2>/dev/null
+echo -ne "${DONE} Remove old containers\r"
+echo -ne '\n'
 
-# remove all images
-echo '####################################################'
-echo 'Removing images ...'
-echo '####################################################'
-docker rmi $(docker images -q)
+echo -ne "${PROGRESS} Remove dangling images\r"
+docker rmi $(docker images --filter dangling=true -q) 2>/dev/null
+echo -ne "${DONE} Remove dangling images\r"
+echo -ne '\n'
 
-# remove all stray volumes if any
-echo '####################################################'
-echo 'Revoming docker container volumes (if any)'
-echo '####################################################'
-docker volume rm $(docker volume ls -q)
+echo -ne "${PROGRESS} Remove all images\r"
+docker rmi $(docker images -q) 2>/dev/null
+echo -ne "${DONE} Remove images\r"
+echo -ne '\n'
 
+echo -ne "${PROGRESS} Cleaning volumes\r"
+docker volume rm $(docker volume ls -q) 2>/dev/null
+echo -ne "${DONE} Cleaning volumes\r"
+echo -ne "\n"
