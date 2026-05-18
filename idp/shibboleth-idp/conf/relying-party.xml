@@ -8,7 +8,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
-                           
+
        default-init-method="initialize"
        default-destroy-method="destroy">
 
@@ -22,7 +22,7 @@
     <bean id="shibboleth.UnverifiedRelyingParty" parent="RelyingParty">
         <property name="profileConfigurations">
             <list>
-            <!-- <bean parent="SAML2.SSO" p:encryptAssertions="false" /> -->
+                <!-- <bean parent="SAML2.SSO" p:encryptAssertions="false" /> -->
             </list>
         </property>
     </bean>
@@ -34,16 +34,16 @@
     <bean id="shibboleth.DefaultRelyingParty" parent="RelyingParty">
         <property name="profileConfigurations">
             <list>
-                <bean parent="Shibboleth.SSO" p:postAuthenticationFlows="attribute-release" />
-                <ref bean="SAML1.AttributeQuery" />
-                <ref bean="SAML1.ArtifactResolution" />
-                <bean parent="SAML2.SSO" p:postAuthenticationFlows="attribute-release" />
-                <ref bean="SAML2.ECP" />
-                <ref bean="SAML2.Logout" />
-                <ref bean="SAML2.AttributeQuery" />
-                <ref bean="SAML2.ArtifactResolution" />
-                <ref bean="CAS.LoginConfiguration" />
-                <ref bean="CAS.ValidateConfiguration" />
+                <bean parent="Shibboleth.SSO" p:postAuthenticationFlows="attribute-release"/>
+                <ref bean="SAML1.AttributeQuery"/>
+                <ref bean="SAML1.ArtifactResolution"/>
+                <bean parent="SAML2.SSO" p:postAuthenticationFlows="attribute-release"/>
+                <ref bean="SAML2.ECP"/>
+                <ref bean="SAML2.Logout"/>
+                <ref bean="SAML2.AttributeQuery"/>
+                <ref bean="SAML2.ArtifactResolution"/>
+                <ref bean="CAS.LoginConfiguration"/>
+                <ref bean="CAS.ValidateConfiguration"/>
             </list>
         </property>
     </bean>
@@ -54,7 +54,7 @@
         <bean parent="RelyingPartyByName" c:relyingPartyIds="https://sp.ccc.local/shibboleth">
             <property name="profileConfigurations">
                 <list>
-                    <bean parent="SAML2.SSO" p:encryptAssertions="false" p:postAuthenticationFlows="attribute-release" />
+                    <bean parent="SAML2.SSO" p:encryptAssertions="false" p:postAuthenticationFlows="attribute-release"/>
                 </list>
             </property>
         </bean>
@@ -71,7 +71,7 @@
             </property>
         </bean>
         -->
-        
+
     </util:list>
 
 </beans>

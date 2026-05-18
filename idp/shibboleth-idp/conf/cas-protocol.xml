@@ -30,8 +30,8 @@
                 <bean class="net.shibboleth.idp.cas.service.ServiceDefinition"
                       c:regex="https://idptestbed.localhost/.*"
                       p:group="non-proxying-services"
-                      p:authorizedToProxy="false" />
-                
+                      p:authorizedToProxy="false"/>
+
             </list>
         </property>
     </bean>

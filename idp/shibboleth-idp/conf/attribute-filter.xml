@@ -9,35 +9,35 @@
     and their options.
 -->
 <AttributeFilterPolicyGroup id="ShibbolethFilterPolicy"
-        xmlns="urn:mace:shibboleth:2.0:afp"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd">
+                            xmlns="urn:mace:shibboleth:2.0:afp"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xsi:schemaLocation="urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd">
 
     <!-- Release some attributes to an SP. -->
     <AttributeFilterPolicy id="example1">
         <PolicyRequirementRule xsi:type="OR">
-            <Rule xsi:type="Requester" value="https://sprovider.secaas-labs-organization/shibboleth" />
-            <Rule xsi:type="Requester" value="http://secaas-labs-organization/sp/simplesamlphp" />
+            <Rule xsi:type="Requester" value="https://sprovider.secaas-labs-organization/shibboleth"/>
+            <Rule xsi:type="Requester" value="http://secaas-labs-organization/sp/simplesamlphp"/>
         </PolicyRequirementRule>
 
         <AttributeRule attributeID="uid">
-            <PermitValueRule xsi:type="ANY" />
+            <PermitValueRule xsi:type="ANY"/>
         </AttributeRule>
 
         <AttributeRule attributeID="mail">
-            <PermitValueRule xsi:type="ANY" />
+            <PermitValueRule xsi:type="ANY"/>
         </AttributeRule>
 
         <AttributeRule attributeID="surname">
-            <PermitValueRule xsi:type="ANY" />
+            <PermitValueRule xsi:type="ANY"/>
         </AttributeRule>
 
         <AttributeRule attributeID="givenName">
-            <PermitValueRule xsi:type="ANY" />
+            <PermitValueRule xsi:type="ANY"/>
         </AttributeRule>
 
         <AttributeRule attributeID="eduPersonPrincipalName">
-            <PermitValueRule xsi:type="ANY" />
+            <PermitValueRule xsi:type="ANY"/>
         </AttributeRule>
 
     </AttributeFilterPolicy>
