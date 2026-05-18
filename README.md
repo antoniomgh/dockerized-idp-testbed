@@ -1,16 +1,18 @@
-# Versión
+# Acceso
 
-Esta versión añade el ldap original, montado desde un centos7 por uno basado en osixia/openldap:1.5.0, incluyendo un UI, accesible desde:
+https://idptestbed.localhost
 
+# Docker, dive tool
 
-URL: http://localhost:8081/
-Usuario: cn=admin,dc=idptestbed
-Password: password
+Muy útil inspección de imagenes y capas de docker, ademas de comparar dos imagenes y ver que capas son iguales o diferentes.
 
+https://github.com/wagoodman/dive
 
-https://github.com/osixia/container-openldap/blob/main/image/service/slapd/assets/config/bootstrap/ldif/01-config-password.ldif
+https://dev.to/klip_klop/dive-into-docker-part-4-inspecting-docker-image-568o
 
 # Docker commands
+
+https://gist.github.com/codewithleader/4fb24e08d623858e329c625932900947
 
 Down:
 docker compose -f docker-compose.r1.yml down -v
@@ -25,7 +27,7 @@ docker logs -f ldap
 
 http://localhost:8081/
 
-cn=admin,dc=idptestbed
+cn=admin,dc=idptestbed,dc=localhost
 password
 
 # ladpsearch
@@ -35,49 +37,49 @@ password
 docker exec -it ldap /bin/bash
 
 ok: Query using admin all objects
-% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "objectclass=*"
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "objectclass=*"
 
 ok: Query using admin a specific user
-% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(uid=student1)"
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "(uid=student1)"
 
 ok: Query using admin a organizational unit
-% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(ou=people)"
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "(ou=people)"
 
 ok: Query using admin a specific user without attributes
-% ldapsearch -x -b "ou=People,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+% ldapsearch -x -b "ou=People,dc=idptestbed,dc=localhost" -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s one "(uid=student1)" 1.1
 
 --> 32 No such object
-% ldapsearch -x -b "ou=People,dc=idptestbed" -D "uid=student1,ou=People,dc=idptestbed" -w password
+% ldapsearch -x -b "ou=People,dc=idptestbed,dc=localhost" -D "uid=student1,ou=People,dc=idptestbed,dc=localhost" -w password
 
 ## Outside the container (docker exec)
 
 ok: Query using admin all objects
-% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "objectclass=*"
+% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "objectclass=*"
 
 ok: Query using admin a specific user
-% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(uid=student1)"
+% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "(uid=student1)"
 
 ok: Query using admin a organizational unit
-% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(ou=people)"
+% docker exec ldap ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "(ou=people)"
 
 ok: Query using admin a specific user without attributes
-% docker exec ldap ldapsearch -x -b "ou=People,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+% docker exec ldap ldapsearch -x -b "ou=People,dc=idptestbed,dc=localhost" -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s one "(uid=student1)" 1.1
 
-docker exec ldap ldapsearch -x -H ldap://ldap:389 -b "ou=people,dc=idptestbed" -s one "(uid=student1)" 1.1
-docker exec ldap ldapsearch -x -b "ou=people,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+docker exec ldap ldapsearch -x -H ldap://ldap:389 -b "ou=people,dc=idptestbed,dc=localhost" -s one "(uid=student1)" 1.1
+docker exec ldap ldapsearch -x -b "ou=people,dc=idptestbed,dc=localhost" -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s one "(uid=student1)" 1.1
 ## Outside the container
 
 ok: Query using admin all objects
-% ldapsearch -x -H ldap://ldap:389 -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "objectclass=*"
+% ldapsearch -x -H ldap://ldap:389 -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "objectclass=*"
 
 ok: Query using admin a specific user
-% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(uid=student1)"
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "(uid=student1)"
 
 ok: Query using admin a organizational unit
-% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed" -w password -s sub "(ou=people)"
+% ldapsearch -x -b dc=idptestbed -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s sub "(ou=people)"
 
 ok: Query using admin a specific user without attributes
-% ldapsearch -x -H ldap://ldap:389 -b "ou=People,dc=idptestbed" -D "cn=admin,dc=idptestbed" -w password -s one "(uid=student1)" 1.1
+% ldapsearch -x -H ldap://ldap:389 -b "ou=People,dc=idptestbed,dc=localhost" -D "cn=admin,dc=idptestbed,dc=localhost" -w password -s one "(uid=student1)" 1.1
 
 
 # dockerized-idp-testbed

@@ -2,7 +2,7 @@
 
 BIN_FOLDER="$(dirname "$0")"
 
-${BIN_FOLDER}/dxdown.sh "$1"
+${BIN_FOLDER}/dxstop.sh "$1"
 
 COMPOSE_FILENAME="docker-compose.yml"
 if [ ! -z "$1" ]; then

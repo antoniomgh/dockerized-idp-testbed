@@ -10,7 +10,7 @@
 /*
  * Guest IdP. allows users to sign up and register. Great for testing!
  */
-$metadata['https://mysample-organization/idp/shibboleth'] = array(
+$metadata['https://secaas-labs-organization/idp/shibboleth'] = array(
 	'name' => array(
 		'en' => 'Shibboleth IdP',
 	),
@@ -21,7 +21,7 @@ $metadata['https://mysample-organization/idp/shibboleth'] = array(
 	'certificate' => 'idp-signing.crt',
 );
 
-$metadata['https://mysample-organization/idp/simplesamlphp'] = array(
+$metadata['https://secaas-labs-organization/idp/simplesamlphp'] = array(
 	'name' => array(
 		'en' => 'SimpleSAMLphp IdP',
 	),
