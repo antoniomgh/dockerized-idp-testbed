@@ -16,8 +16,8 @@
     <!-- Release some attributes to an SP. -->
     <AttributeFilterPolicy id="example1">
         <PolicyRequirementRule xsi:type="OR">
-            <Rule xsi:type="Requester" value="https://sprovider.secaas-labs-organization/shibboleth"/>
-            <Rule xsi:type="Requester" value="http://secaas-labs-organization/sp/simplesamlphp"/>
+            <Rule xsi:type="Requester" value="https://sprovider.secaas-labs-poc-01.org/shibboleth"/>
+            <Rule xsi:type="Requester" value="http://secaas-labs-poc-01.org/sp/simplesamlphp"/>
         </PolicyRequirementRule>
 
         <AttributeRule attributeID="uid">
